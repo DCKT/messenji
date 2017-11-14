@@ -1,0 +1,24 @@
+{
+  "name": "easymes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "micro",
+    "dev": "micro-dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.5",
+    "micro": "^9.0.0",
+    "socket.io": "^2.0.3"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.0.1",
+    "eslint": "^4.7.2",
+    "eslint-config-colisweb": "^1.0.4",
+    "micro-dev": "^1.2.3"
+  }
+}
