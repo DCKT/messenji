@@ -14,6 +14,7 @@ import { ConversationDetails, Contacts } from './views/'
  */
 import './index.css'
 import { store } from './store'
+import { initWebsocket } from './utils/websocket'
 
 /**
  * Styles
@@ -27,6 +28,8 @@ const containerStyle = css({
   borderRadius: 4,
   padding: '1rem'
 })
+
+initWebsocket(store)
 
 ReactDOM.render(
   <Provider store={store}>

@@ -12,7 +12,8 @@
     "react-scripts": "1.0.14",
     "redux": "^3.7.2",
     "redux-localstorage": "^0.4.1",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "websocket": "^1.0.25"
   },
   "scripts": {
     "start": "react-scripts start",

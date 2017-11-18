@@ -99,9 +99,6 @@ class BaseChat extends React.Component {
           {messages.map((message, i) => <Message key={i} {...message} />)}
         </div>
         <Input />
-        {/* <button type="button" onClick={this._clearMessages} {...clearButtonStyle}>
-          Clear
-        </button> */}
       </div>
     )
   }

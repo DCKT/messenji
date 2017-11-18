@@ -1,57 +1,72 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+// @flow
 
-import React, { Component } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { w3cwebsocket as W3CWebSocket } from "websocket";
+import SmsListener from "react-native-android-sms-listener";
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
+const styles = StyleSheet.create({
+  title: {
+    textAlign: "center",
+    fontSize: 28,
+    fontWeight: "600"
+  },
+  status: {
+    textAlign: "center",
+    fontSize: 26
+  }
 });
 
-export default class App extends Component<{}> {
+export default class App extends React.Component {
+  state = {
+    status: ""
+  };
+
+  constructor() {
+    super();
+
+    const client = new W3CWebSocket("ws://192.168.1.82:7878", "echo-protocol");
+
+    client.onerror = err => {
+      this.setState(state => ({ ...state, status: "Error" }));
+      console.log("Connection Error");
+      console.log(err);
+    };
+
+    client.onopen = () => {
+      console.log("WebSocket Client Connected");
+      this.socket = client;
+      this.setState(state => ({ ...state, status: "Connected" }));
+    };
+
+    client.onclose = () => {
+      console.log("echo-protocol Client Closed");
+      this.setState(state => ({ ...state, status: "Closed" }));
+    };
+
+    client.onmessage = function(e) {
+      if (typeof e.data === "string") {
+        console.log("Received: '" + e.data + "'");
+      }
+    };
+
+    SmsListener.addListener(message => {
+      if (this.socket) {
+        this.socket.send(
+          JSON.stringify({
+            event: "sms:received",
+            payload: message
+          })
+        );
+      }
+    });
+  }
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <Text style={styles.title}>Status</Text>
+        <Text style={styles.status}>{this.state.status}</Text>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
